@@ -1,0 +1,25 @@
+{
+  "name": "back-end-e-comms",
+  "version": "1.0.0",
+  "description": "e-commerce back end",
+  "main": "server.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/e6m9/back-end-e-comms.git"
+  },
+  "keywords": [
+    "e-commerce",
+    "back",
+    "end",
+    "orm"
+  ],
+  "author": "e6m9",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/e6m9/back-end-e-comms/issues"
+  },
+  "homepage": "https://github.com/e6m9/back-end-e-comms#readme"
+}
