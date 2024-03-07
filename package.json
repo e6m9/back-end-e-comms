@@ -21,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/e6m9/back-end-e-comms/issues"
   },
-  "homepage": "https://github.com/e6m9/back-end-e-comms#readme"
+  "homepage": "https://github.com/e6m9/back-end-e-comms#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.9.2",
+    "sequelize": "^6.37.1"
+  }
 }
