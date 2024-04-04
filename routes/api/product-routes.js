@@ -62,51 +62,52 @@ router.get('/:id', async (req, res) => {
 // create new product
 router.post('/', async (req, res) => {
   try {
-    const productData = await Product.create(req.body)
-    // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-    if (req.body.tagIds.length) {
-      const productTagIdArr = req.body.tagIds.map((tagId) => {
-        return {
-          productId: productData.id,
-          tagId,
-        };
-      });
-      const productTags = await ProductTag.bulkCreate(productTagIdArr);
-      res.status(200).json({ ...productData, productTags });
-    } else {
-      // if no product tags, just respond
-      res.status(200).json(productData);
+    const productData = await Product.create(req.body);
+    
+    if (req.body.tagIds && req.body.tagIds.length) {
+      const productTagIdArr = req.body.tagIds.map(tagId => ({
+        productId: productData.id,
+        tagId,
+      }));
+      await ProductTag.bulkCreate(productTagIdArr);
     }
+
+    const newProductData = await Product.findByPk(productData.id, {
+      include: [
+        { model: Category },
+        { model: Tag, as: 'tags', through: { attributes: [] } },
+      ],
+    });
+
+    res.status(200).json(newProductData);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(400).json(err);
-  };
+  }
 });
 
+// add a tag to a product by id
 router.post('/:productId/addTag', async (req, res) => {
   const { productId } = req.params;
   const { tagId } = req.body;
 
   try {
-    // Check if the tag exists
     const tagExists = await Tag.findByPk(tagId);
     if (!tagExists) {
-      return res.status(404).json({ message: 'Tag not found' });
+      return res.status(404).json({ message: 'tag not found' });
     }
 
-    // Check if the product exists
     const productExists = await Product.findByPk(productId);
     if (!productExists) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: 'product not found' });
     }
 
-    // Create a new entry in the ProductTag join table
     const productTag = await ProductTag.create({
       productId,
       tagId,
     });
 
-    res.status(200).json({ message: 'Tag added to product successfully', productTag });
+    res.status(200).json({ message: 'tag added to product successfully', productTag });
   } catch (err) {
     console.error(err);
     res.status(400).json(err);
