@@ -4,7 +4,9 @@
   "description": "e-commerce back end",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "seed": "node ./seeds/index.js",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

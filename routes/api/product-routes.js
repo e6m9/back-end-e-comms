@@ -42,10 +42,10 @@ router.post('/', async (req, res) => {
     const productData = await Product.create(req.body)
     // if there's product tags, we need to create pairings to bulk create in the ProductTag model
     if (req.body.tagIds.length) {
-      const productTagIdArr = req.body.tagIds.map((tag_id) => {
+      const productTagIdArr = req.body.tagIds.map((tagId) => {
         return {
-          product_id: productData.id,
-          tag_id,
+          productId: productData.id,
+          tagId,
         };
       });
       const productTags = await ProductTag.bulkCreate(productTagIdArr);
@@ -60,6 +60,36 @@ router.post('/', async (req, res) => {
   };
 });
 
+router.post('/:productId/addTag', async (req, res) => {
+  const { productId } = req.params;
+  const { tagId } = req.body;
+
+  try {
+    // Check if the tag exists
+    const tagExists = await Tag.findByPk(tagId);
+    if (!tagExists) {
+      return res.status(404).json({ message: 'Tag not found' });
+    }
+
+    // Check if the product exists
+    const productExists = await Product.findByPk(productId);
+    if (!productExists) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Create a new entry in the ProductTag join table
+    const productTag = await ProductTag.create({
+      productId,
+      tagId,
+    });
+
+    res.status(200).json({ message: 'Tag added to product successfully', productTag });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json(err);
+  }
+});
+
 // Update product
 router.put('/:id', async (req, res) => {
   try {
@@ -72,16 +102,15 @@ router.put('/:id', async (req, res) => {
 
     if (req.body.tagIds && req.body.tagIds.length) {
       const currentProductTags = await ProductTag.findAll({
-        where: { product_id: req.params.id },
+        where: { productId: req.params.id },
       });
 
-      const currentProductTagIds = currentProductTags.map(tag => tag.tag_id);
+      const currentProductTagIds = currentProductTags.map(tag => tag.tagId);
       const newProductTagIds = req.body.tagIds;
 
-
       const tagsToAdd = newProductTagIds.filter(id => !currentProductTagIds.includes(id))
-        .map(tag_id => ({ product_id: req.params.id, tag_id }));
-      const tagsToRemove = currentProductTags.filter(({ tag_id }) => !newProductTagIds.includes(tag_id))
+        .map(tagId => ({ productId: req.params.id, tagId }));
+      const tagsToRemove = currentProductTags.filter(({ tagId }) => !newProductTagIds.includes(tagId))
         .map(tag => tag.id);
 
       await Promise.all([
