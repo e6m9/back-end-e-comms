@@ -11,9 +11,9 @@ a backend for an ecommerce company
 - [Contact](#contact)
 
 ## Usage
-open a terminal and enter 'npm run seed' followed by 'npm start'. Then open thunder, or something similar, and connect to localhost:3001. Follow the appropriate 'get', 'put', 'post', and 'delete' methods for the '/categories', '/products', and '/tags' routes to retrieve, update, create, and delete data.
+open a terminal and connect to mysql by entering "mysql -u root -p" followed by a password, then copy and paste the contents of the schema.sql file in the db folder into the terminal and press enter. Open another terminal and enter 'npm run seed' followed by 'npm start'. Then open thunder, or something similar, and connect to localhost:3001. Follow the appropriate 'get', 'put', 'post', and 'delete' methods for the '/categories', '/products', and '/tags' routes to retrieve, update, create, and delete data.
 
-- [demonstration_video](https://drive.google.com/file/d/1aTR8SHj2_b9GUF5IVOXG3IVIsqHvDOxf/view?usp=drive_link)
+- [demonstration_video](https://drive.google.com/file/d/1p-6O9EjxLPjN7J81GDVkQAEPGNDJO5Tb/view?usp=drive_link)
 
 ## License
 MIT License
